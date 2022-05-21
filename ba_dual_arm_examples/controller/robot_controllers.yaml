@@ -1,0 +1,42 @@
+a_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - a_joint_1
+     - a_joint_2
+     - a_joint_3
+     - a_joint_4
+     - a_joint_5
+     - a_joint_6
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      a_joint_1: {trajectory: 0.1, goal: 0.1}
+      a_joint_2: {trajectory: 0.1, goal: 0.1}
+      a_joint_3: {trajectory: 0.1, goal: 0.1}
+      a_joint_4: {trajectory: 0.1, goal: 0.1}
+      a_joint_5: {trajectory: 0.1, goal: 0.1}
+      a_joint_6: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10
+b_controller:
+  type: position_controllers/JointTrajectoryController
+  joints:
+     - b_joint_1
+     - b_joint_2
+     - b_joint_3
+     - b_joint_4
+     - b_joint_5
+     - b_joint_6
+  constraints:
+      goal_time: 0.6
+      stopped_velocity_tolerance: 0.05
+      b_joint_1: {trajectory: 0.1, goal: 0.1}
+      b_joint_2: {trajectory: 0.1, goal: 0.1}
+      b_joint_3: {trajectory: 0.1, goal: 0.1}
+      b_joint_4: {trajectory: 0.1, goal: 0.1}
+      b_joint_5: {trajectory: 0.1, goal: 0.1}
+      b_joint_6: {trajectory: 0.1, goal: 0.1}
+  stop_trajectory_duration: 0.5
+  state_publish_rate:  25
+  action_monitor_rate: 10

@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>niryo_one_description</name>
+  <version>2.3.3</version>
+  <description>Provides URDF files for Moveit! and IKfast plugin</description>
+  <author>Edouard Renard</author>
+  <maintainer email="r.lux@niryo.com">Rémi Lux</maintainer>
+  <license>GPLv3</license>
+
+      <buildtool_depend>ament_cmake</buildtool_depend>
+    <buildtool_depend>rosidl_default_generators</buildtool_depend>
+
+    <exec_depend>rosidl_default_runtime</exec_depend>
+<exec_depend>ros2launch</exec_depend>
+
+     <export>
+<build_type>ament_cmake</build_type>
+    </export>
+</package>

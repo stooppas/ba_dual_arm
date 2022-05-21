@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<robot name="niryo_one" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:include filename="$(find niryo_one_description)/urdf/bot.xacro" />
+
+    <link name="world" />
+    <xacro:arg name="prefix" default=""/>
+
+    <xacro:bot parent="world" prefix="$(arg prefix)" name="niryo_one">
+        <origin xyz="0 0 0" rpy="0 0 0" />
+    </xacro:bot>
+</robot> 

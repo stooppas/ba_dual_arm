@@ -1,0 +1,32 @@
+<package format="3">
+
+    <name>niryo_one_moveit_config</name>
+    <version>2.3.3</version>
+    <description>
+        Ros2 moveit-config for the niryo_one robot
+    </description>
+    <author email="stooppas@students.zhaw.ch">Pascal Stoop</author>
+
+    <license>GPLv3</license>
+
+    <url type="website">http://moveit.ros.org/</url>
+    <url type="bugtracker">https://github.com/ros-planning/moveit/issues</url>
+    <url type="repository">https://github.com/ros-planning/moveit</url>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+    <buildtool_depend>ament_cmake_python</buildtool_depend>
+
+    <exec_depend>launch</exec_depend>
+    <exec_depend>launch_ros</exec_depend>
+    <exec_depend>moveit_ros_move_group</exec_depend>
+    <exec_depend>moveit_servo</exec_depend>
+    <exec_depend>rviz2</exec_depend>
+    <exec_depend>niryo_one_description</exec_depend>
+    <exec_depend>urdf</exec_depend>
+    <exec_depend>xacro</exec_depend>
+
+    <export>
+<build_type>ament_cmake</build_type>
+    </export>
+
+</package>
