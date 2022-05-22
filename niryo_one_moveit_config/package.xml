@@ -6,6 +6,7 @@
         Ros2 moveit-config for the niryo_one robot
     </description>
     <author email="stooppas@students.zhaw.ch">Pascal Stoop</author>
+    <maintainer email="stooppas@students.zhaw.ch">Pascal Stoop</maintainer>
 
     <license>GPLv3</license>
 
