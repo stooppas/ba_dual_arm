@@ -49,6 +49,16 @@ ament_target_dependencies(a_bot_spin
   Eigen3
 )
 
+add_executable(b_bot_spin src/b_bot_spin.cpp)
+
+ament_target_dependencies(b_bot_spin 
+  moveit_core
+  moveit_ros_planning_interface
+  controller_manager
+  rclcpp
+  Eigen3
+)
+
 add_executable(collision_test src/collision_test.cpp)
 
 ament_target_dependencies(collision_test 
@@ -59,11 +69,22 @@ ament_target_dependencies(collision_test
   Eigen3
 )
 
+add_executable(pick_and_place src/pick_and_place.cpp)
+
+ament_target_dependencies(pick_and_place 
+  moveit_core
+  moveit_ros_planning_interface
+  controller_manager
+  rclcpp
+  Eigen3
+)
+
+
 
 #############
 ## Install ##
 #############
-install(TARGETS eef_align a_bot_spin collision_test
+install(TARGETS eef_align a_bot_spin b_bot_spin collision_test pick_and_place
   ARCHIVE DESTINATION lib/${PROJECT_NAME}
   LIBRARY DESTINATION lib/${PROJECT_NAME}
   RUNTIME DESTINATION lib/${PROJECT_NAME}

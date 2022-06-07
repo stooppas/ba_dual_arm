@@ -17,8 +17,8 @@
         <joint name="a_bot_joint_4"/>
         <joint name="a_bot_joint_5"/>
         <joint name="a_bot_joint_6"/>
-        <joint name="a_bot_hand_tool_joint"/>
-        <chain base_link="a_bot_base_link" tip_link="a_bot_tool_link"/>
+        <link name="a_bot_hand_link"/>
+        <link name="a_bot_tool_link"/>
     </group>
     <group name="b_bot">
         <joint name="b_bot_joint_world"/>
@@ -28,8 +28,8 @@
         <joint name="b_bot_joint_4"/>
         <joint name="b_bot_joint_5"/>
         <joint name="b_bot_joint_6"/>
-        <joint name="b_bot_hand_tool_joint"/>
-        <chain base_link="b_bot_base_link" tip_link="b_bot_tool_link"/>
+        <link name="b_bot_hand_link"/>
+        <link name="b_bot_tool_link"/>
     </group>
     <group name="niryo_two">
         <group name="a_bot"/>
@@ -39,29 +39,23 @@
         <link name="a_bot_base_gripper_1"/>
         <joint name="a_bot_joint_to_gripper"/>
         <joint name="a_bot_joint_base_to_mors_1"/>
-        <joint name="a_bot_joint_base_to_mors_2"/>
     </group>
     <group_state name="close" group="a_bot_tool">
         <joint name="a_bot_joint_base_to_mors_1" value="-0.01"/>
-        <joint name="a_bot_joint_base_to_mors_2" value="-0.01"/>
     </group_state>
     <group_state name="open" group="a_bot_tool">
         <joint name="a_bot_joint_base_to_mors_1" value="0.007"/>
-        <joint name="a_bot_joint_base_to_mors_2" value="0.007"/>
     </group_state>
     <group name="b_bot_tool">
         <link name="b_bot_base_gripper_1"/>
         <joint name="b_bot_joint_to_gripper"/>
         <joint name="b_bot_joint_base_to_mors_1"/>
-        <joint name="b_bot_joint_base_to_mors_2"/>
     </group>
     <group_state name="close" group="b_bot_tool">
-        <joint name="a_bot_joint_base_to_mors_1" value="-0.01"/>
-        <joint name="a_bot_joint_base_to_mors_2" value="-0.01"/>
+        <joint name="b_bot_joint_base_to_mors_1" value="-0.01"/>
     </group_state>
     <group_state name="open" group="b_bot_tool">
         <joint name="b_bot_joint_base_to_mors_1" value="0.007"/>
-        <joint name="b_bot_joint_base_to_mors_2" value="0.007"/>
     </group_state>
     <!--VIRTUAL JOINT Purpose this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="a_bot_joint_world" type="fixed" parent_frame="world" child_link="a_bot_base_link"/>

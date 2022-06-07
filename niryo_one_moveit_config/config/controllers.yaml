@@ -1,6 +1,8 @@
 controller_names:
   - a_bot/niryo_one_follow_joint_trajectory_controller
   - b_bot/niryo_one_follow_joint_trajectory_controller
+  - a_bot/gripper_controller
+  - b_bot/gripper_controller
 
 a_bot/niryo_one_follow_joint_trajectory_controller:
       action_ns: follow_joint_trajectory
@@ -25,3 +27,17 @@ b_bot/niryo_one_follow_joint_trajectory_controller:
           - b_bot_joint_4
           - b_bot_joint_5
           - b_bot_joint_6
+
+a_bot/gripper_controller:
+      action_ns: gripper_cmd
+      type: GripperCommand
+      default: true
+      joints:
+          - a_bot_joint_base_to_mors_1 
+
+b_bot/gripper_controller:
+      action_ns: gripper_cmd
+      type: GripperCommand
+      default: true
+      joints:
+          - b_bot_joint_base_to_mors_1 
