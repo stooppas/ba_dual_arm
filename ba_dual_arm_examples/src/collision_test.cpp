@@ -1,16 +1,13 @@
 #include <rclcpp/rclcpp.hpp>
-
 #include <moveit/move_group_interface/move_group_interface.h>
 
-#include <stdlib.h>
-#include <random>
 #include <memory>
 #include <thread>
-#include <math.h>
 
-rclcpp::Node::SharedPtr node;
+#define pi 3.14159265359
+
 void change_between_pose(const std::string& move_group, std::vector<double>pose_1,std::vector<double> pose_2);
-double pi = 3.14159265359;
+rclcpp::Node::SharedPtr node;
 
 int main(int argc, char** argv)
 {
@@ -27,8 +24,6 @@ int main(int argc, char** argv)
 
   new std::thread(change_between_pose,a_bot,pose_a_1,pose_a_2);
   new std::thread(change_between_pose,b_bot,pose_b_1,pose_b_2);
-  //new std::thread([&](){change_between_pose(a_bot,pose_a_1,pose_a_2);});
-  //std::thread([&](){RCLCPP_INFO(node->get_logger(),"Move group: %s",a_bot.c_str());});
 
   rclcpp::spin(node);
   rclcpp::shutdown();

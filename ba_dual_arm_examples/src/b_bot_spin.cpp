@@ -1,52 +1,25 @@
 #include <rclcpp/rclcpp.hpp>
-#include <memory>
-#include <moveit/moveit_cpp/moveit_cpp.h>
-#include <moveit/moveit_cpp/planning_component.h>
-#include <moveit/robot_state/conversions.h>
-
-#include <geometry_msgs/msg/point_stamped.hpp>
-#include <trajectory_msgs/msg/joint_trajectory.hpp>
-#include <moveit_msgs/msg/attached_collision_object.hpp>
-#include <shape_msgs/msg/solid_primitive.hpp>
-
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/move_group_interface/move_group_interface.h>
 
-#include <stdlib.h>
-#include <Eigen/Core>
-#include <Eigen/Geometry>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
-#include <random>
+#include <memory>
 #include <thread>
-#include <math.h>
 
-template<typename T>
-std::vector<T> slice(std::vector<T> const &v, int m, int n)
-{
-    auto first = v.cbegin() + m;
-    auto last = v.cbegin() + n + 1;
- 
-    std::vector<T> vec(first, last);
-    return vec;
-}
+#define pi 3.14159265359
 
-rclcpp::Node::SharedPtr node;
-std::shared_ptr<std::thread> run_thread;
-void main_thread();
-double pi = 3.14159265359;
+void main_thread(rclcpp::Node::SharedPtr node);
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc,argv);
 
-  node = std::make_shared<rclcpp::Node>("moveit");
+  rclcpp::Node::SharedPtr node = std::make_shared<rclcpp::Node>("b_bot_spin");
 
-  run_thread.reset(new std::thread(std::bind(&main_thread)));
+  new std::thread(main_thread,node);
 
   rclcpp::spin(node);
   rclcpp::shutdown();
 }
-void main_thread(){
+void main_thread(rclcpp::Node::SharedPtr node){
   std::vector<double> joint_values;
 
   moveit::planning_interface::MoveGroupInterface b_bot_group_interface(node,"b_bot");
@@ -72,7 +45,7 @@ void main_thread(){
         b_bot_group_interface.setJointValueTarget(b_bot_joint_names, pose_2);
     }
     moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-    bool success = (b_bot_group_interface.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+    bool success = (b_bot_group_interface.plan(my_plan) == moveit::core::MoveItErrorCode::SUCCESS);
     if(!success){
       RCLCPP_INFO(node->get_logger(),"Plan did not succeed");
     }else{

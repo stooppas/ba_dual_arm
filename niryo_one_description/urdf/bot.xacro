@@ -278,41 +278,7 @@
         <origin xyz="0 0 ${distance_hand_tool}" rpy="${-PI/2} ${-PI/2} 0" />
 	</joint>
 
-    <ros2_control name="${name}" type="system">
-      <hardware>
-        <plugin>niryo_one_driver/NiryoOneHardwareInterface</plugin>
-      </hardware>
-      <joint name="${prefix}_joint_1">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-      <joint name="${prefix}_joint_2">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-        <joint name="${prefix}_joint_3">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-        <joint name="${prefix}_joint_4">
-        <command_interface name="position"/>
-
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-        <joint name="${prefix}_joint_5">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
-        <joint name="${prefix}_joint_6">
-        <command_interface name="position"/>
-        <state_interface name="position"/>
-        <state_interface name="velocity"/>
-      </joint>
+    <ros2_control name="${name}" type="fake_components/GenericSystem">
     </ros2_control>
   </xacro:macro>
   </robot>

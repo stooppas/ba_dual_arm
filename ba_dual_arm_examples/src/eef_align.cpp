@@ -1,48 +1,33 @@
 #include <rclcpp/rclcpp.hpp>
-#include <memory>
-#include <moveit/moveit_cpp/moveit_cpp.h>
-#include <moveit/moveit_cpp/planning_component.h>
-#include <moveit/robot_state/conversions.h>
 
 #include <geometry_msgs/msg/point_stamped.hpp>
-#include <trajectory_msgs/msg/joint_trajectory.hpp>
-
-
-#include <moveit/planning_scene_interface/planning_scene_interface.h>
 #include <moveit/move_group_interface/move_group_interface.h>
+#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 
-#include <stdlib.h>
-#include <Eigen/Core>
-#include <Eigen/Geometry>
-#include <tf2_geometry_msgs/tf2_geometry_msgs.h>
+#include <memory>
 #include <random>
 #include <thread>
-#include <math.h>
 
-rclcpp::Node::SharedPtr node;
-void main_thread();
-double pi = 3.14159265359;
+#define pi 3.14159265359
+
+void main_thread(rclcpp::Node::SharedPtr node);
 
 int main(int argc, char** argv)
 {
   rclcpp::init(argc,argv);
 
-  node = std::make_shared<rclcpp::Node>("moveit");
+  rclcpp::Node::SharedPtr node = std::make_shared<rclcpp::Node>("eef_align");
 
-  std::thread(main_thread);
+  new std::thread(main_thread,node);
 
   rclcpp::spin(node);
   rclcpp::shutdown();
 }
-void main_thread(){
+void main_thread(rclcpp::Node::SharedPtr node){
   std::vector<double> joint_values;
 
   moveit::planning_interface::MoveGroupInterface a_bot_group_interface(node,"a_bot");
-  RCLCPP_INFO(node->get_logger(),"reached");
-
   moveit::planning_interface::MoveGroupInterface ab_group_interface(node,"niryo_two");
-
-
   moveit::planning_interface::MoveGroupInterface b_bot_group_interface(node,"b_bot");
 
   ab_group_interface.setMaxVelocityScalingFactor(1.0);
@@ -71,8 +56,8 @@ void main_thread(){
   geometry_msgs::msg::Pose b_bot_pose;
  
   // x y z w
-  tf2::Quaternion a_bot_q(-0.0018064082028716572, 0.714190127940822, -0.6999353940485185,0.0044319521005895665);
-  tf2::Quaternion b_bot_q(-0.6959453209354478, -0.029260144371181365, -0.02361341612136324,0.7171097271676862 );
+  tf2::Quaternion a_bot_q(0, 1, 0, 0);
+  tf2::Quaternion b_bot_q(1, 0, 0, 0);
 
   while(rclcpp::ok){
     float x_rotation = rad_distr(gen) * 0.005;
@@ -113,12 +98,12 @@ void main_thread(){
     tf2::Vector3 vec = a_bot_q.getAxis();
 
 
-    a_bot_pose.position.x = 0.05 + random_x ;
-    a_bot_pose.position.y = -0.05 + random_y;
-    a_bot_pose.position.z = 0.46 + random_z ;
-    b_bot_pose.position.x = unitX[0]*0.2 + a_bot_pose.position.x;
-    b_bot_pose.position.y = unitX[1]*0.2 + a_bot_pose.position.y;
-    b_bot_pose.position.z = unitX[2]*0.2 +a_bot_pose.position.z;
+    a_bot_pose.position.x = 0+ random_x ;
+    a_bot_pose.position.y = 0.1 + random_y;
+    a_bot_pose.position.z = 0.44 + random_z ;
+    b_bot_pose.position.x = unitX[0]*0.17 + a_bot_pose.position.x;
+    b_bot_pose.position.y = unitX[1]*0.17 + a_bot_pose.position.y;
+    b_bot_pose.position.z = unitX[2]*0.17 +a_bot_pose.position.z;
 
     RCLCPP_INFO(node->get_logger(),"a_bot: X(%f),Y(%f),Z(%f)",a_bot_pose.position.x,a_bot_pose.position.y,a_bot_pose.position.z);
     RCLCPP_INFO(node->get_logger(),"b_bot: X(%f),Y(%f),Z(%f)",b_bot_pose.position.x,b_bot_pose.position.y,b_bot_pose.position.z);
@@ -127,9 +112,14 @@ void main_thread(){
     bool a_bot_found_ik = kinematic_state->setFromIK(a_bot_joint_model_group, a_bot_pose, timeout);
     bool b_bot_found_ik = kinematic_state->setFromIK(b_bot_joint_model_group, b_bot_pose, timeout);
     
-    if(!a_bot_found_ik || !b_bot_found_ik)
+    if(!a_bot_found_ik)
     {
-      RCLCPP_INFO(node->get_logger(),"Did not find IK solution");
+      RCLCPP_INFO(node->get_logger(),"Did not find IK solution for a_bot");
+      continue;
+    }
+    if(!b_bot_found_ik)
+    {
+      RCLCPP_INFO(node->get_logger(),"Did not find IK solution for b_bot");
       continue;
     }
 
@@ -146,9 +136,10 @@ void main_thread(){
     ab_group_interface.setJointValueTarget(b_bot_joint_names, b_bot_joint_values);
 
     moveit::planning_interface::MoveGroupInterface::Plan my_plan;
-    bool success = (ab_group_interface.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
-    if(!success){
+    bool success = (ab_group_interface.plan(my_plan) == moveit::core::MoveItErrorCode::SUCCESS);
+    if(!success || my_plan.trajectory_.joint_trajectory.points.size() == 0){
       RCLCPP_INFO(node->get_logger(),"Plan did not succeed");
+      continue;
     }
 
     ab_group_interface.execute(my_plan);

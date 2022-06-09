@@ -125,7 +125,6 @@ def launch_setup(context: LaunchContext, *args, **kwargs):
             planning_scene_monitor,
             {"log-level":"debug"},
         ],
-        #arguments=['--ros-args', '--log-level', 'DEBUG']
     )
 
     # rviz with moveit configuration
