@@ -19,6 +19,9 @@
 #include <thread>
 #include <math.h>
 
+#include <niryo_one_msgs/msg/tool_command.hpp>
+#include <niryo_one_msgs/action/tool.hpp>
+
 rclcpp::Node::SharedPtr node;
 void main_thread();
 void addCollisionObjects(moveit::planning_interface::PlanningSceneInterface& planning_scene_interface);
@@ -37,58 +40,71 @@ int main(int argc, char** argv)
   rclcpp::spin(node);
   rclcpp::shutdown();
 }
+  void goal_response_callback(std::shared_future<rclcpp_action::ClientGoalHandle<niryo_one_msgs::action::Tool>::SharedPtr> future)
+  {
+    auto goal_handle = future.get();
+    if (!goal_handle) {
+      RCLCPP_ERROR(node->get_logger(), "Goal was rejected by server");
+    } else {
+      RCLCPP_INFO(node->get_logger(), "Goal accepted by server, waiting for result");
+    }
+  }
+
+  void feedback_callback(
+    rclcpp_action::ClientGoalHandle<niryo_one_msgs::action::Tool>::SharedPtr,
+    const std::shared_ptr<const niryo_one_msgs::action::Tool::Feedback> feedback)
+  {
+    std::stringstream ss;
+    ss << "Next number in sequence received: ";
+    RCLCPP_INFO(node->get_logger(), ss.str().c_str());
+  }
+
+  void result_callback(const rclcpp_action::ClientGoalHandle<niryo_one_msgs::action::Tool>::WrappedResult & result)
+  {
+    switch (result.code) {
+      case rclcpp_action::ResultCode::SUCCEEDED:
+        break;
+      case rclcpp_action::ResultCode::ABORTED:
+        RCLCPP_ERROR(node->get_logger(), "Goal was aborted");
+        return;
+      case rclcpp_action::ResultCode::CANCELED:
+        RCLCPP_ERROR(node->get_logger(), "Goal was canceled");
+        return;
+      default:
+        RCLCPP_ERROR(node->get_logger(), "Unknown result code");
+        return;
+    }
+    std::stringstream ss;
+    ss << "Result received: ";
+    RCLCPP_INFO(node->get_logger(), ss.str().c_str());
+    rclcpp::shutdown();
+  }
 void main_thread()
 {
-    std::vector<double> joint_values;
 
-    moveit::planning_interface::MoveGroupInterface a_bot_group_interface(node,"a_bot");
-    RCLCPP_INFO(node->get_logger(),"reached");
-
-    moveit::planning_interface::MoveGroupInterface ab_group_interface(node,"niryo_two");
-
-
-    moveit::planning_interface::MoveGroupInterface b_bot_group_interface(node,"b_bot");
-
-    ab_group_interface.setMaxVelocityScalingFactor(1.0);
-    ab_group_interface.setMaxAccelerationScalingFactor(1.0);
-    ab_group_interface.setPlanningTime(15.0);
-    ab_group_interface.setNumPlanningAttempts(20.0);
-    
-    moveit::core::RobotModelConstPtr kinematic_model = a_bot_group_interface.getRobotModel();
-    moveit::core::RobotStatePtr kinematic_state = ab_group_interface.getCurrentState();
-    const moveit::core::JointModelGroup* a_bot_joint_model_group = kinematic_model->getJointModelGroup("a_bot");
-    const moveit::core::JointModelGroup* b_bot_joint_model_group = kinematic_model->getJointModelGroup("b_bot");
+    auto client = rclcpp_action::create_client<niryo_one_msgs::action::Tool>(node,"/niryo_one/tool_action");
     
 
-    const std::vector<std::string>& a_bot_joint_names = a_bot_joint_model_group->getVariableNames();
-    const std::vector<std::string>& b_bot_joint_names = b_bot_joint_model_group->getVariableNames();
+    auto goal_msg = niryo_one_msgs::action::Tool::Goal();
 
-    std::vector<double> a_bot_joint_values;
-    std::vector<double> b_bot_joint_values;
+    goal_msg.cmd.tool_id = 11;
+    goal_msg.cmd.cmd_type = 2 ;
+    goal_msg.cmd.gripper_close_speed = 300;
+    goal_msg.cmd.gripper_open_speed = 300;
+    goal_msg.cmd.activate = false;
+    goal_msg.cmd.gpio = 0;
 
-    std::random_device rd; 
-    std::mt19937 gen(rd()); 
-    std::uniform_int_distribution<> distr(-10, 10);
-    std::uniform_int_distribution<> rad_distr(-30, 30);
-
-    geometry_msgs::msg::Pose a_bot_pose;
-    geometry_msgs::msg::Pose b_bot_pose;
- 
-    // x y z w
-    tf2::Quaternion a_bot_q(-0.0018064082028716572, 0.714190127940822, -0.6999353940485185,0.0044319521005895665);
-    tf2::Quaternion b_bot_q(-0.6959453209354478, -0.029260144371181365, -0.02361341612136324,0.7171097271676862 );
+    auto send_goal_options = rclcpp_action::Client<niryo_one_msgs::action::Tool>::SendGoalOptions();
+    send_goal_options.goal_response_callback =
+      std::bind(&goal_response_callback, std::placeholders::_1);
+    send_goal_options.feedback_callback =
+      std::bind(&feedback_callback, std::placeholders::_1, std::placeholders::_2);
+    send_goal_options.result_callback =
+      std::bind(&result_callback, std::placeholders::_1);
 
 
-    moveit::planning_interface::PlanningSceneInterface planning_scene_interface;
+    client->async_send_goal(goal_msg,send_goal_options);
 
-    addCollisionObjects(planning_scene_interface);
-
-    // Wait a bit for ROS things to initialize
-    rclcpp::sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(1.0)));
-
-    //pick(group);
-
-    rclcpp::sleep_for(std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::duration<double>(1.0)));
 
     //place(group);
 
