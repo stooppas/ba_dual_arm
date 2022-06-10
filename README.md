@@ -8,12 +8,13 @@
     sudo apt remove ros-humble-moveit-msgs
 
     mkdir -p ws_moveit/src && cd ws_moveit/src
-    git clone https://github.com/stooppas/moveit2 && git clone https://github.com/stooppas/moveit_msgs
+    git clone https://github.com/stooppas/moveit2 && git clone https://github.com/stooppas/moveit_msgs -b ros2
 
     for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
     rosdep install -r --from-paths . --ignore-src --rosdistro $ROS_DISTRO -y
 
     cd ..
+    source /opt/ros/humble/setup.bash
     colcon build --event-handlers desktop_notification- status- --cmake-args -DCMAKE_BUILD_TYPE=Release
     ```
 2. Install [Niryo One ROS2](https://github.com/stooppas/niryo_one_ros2)
