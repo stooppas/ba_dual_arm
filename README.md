@@ -5,7 +5,7 @@
     ```
     sudo apt remove ros-humble-moveit-msgs
 
-    mkdir ws_moveit/src && cd ws_moveit/src
+    mkdir -p ws_moveit/src && cd ws_moveit/src
     git clone https://github.com/stooppas/moveit2 && git clone https://github.com/stooppas/moveit_msgs
 
     for repo in moveit2/moveit2.repos $(f="moveit2/moveit2_$ROS_DISTRO.repos"; test -r $f && echo $f); do vcs import < "$repo"; done
