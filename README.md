@@ -2,6 +2,8 @@
 ![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/66126160/172908340-3391bfac-9480-4070-8f43-db529522412d.gif)
 ## Build
 1. Build MoveIt2 from my repository
+    
+    Install all dependecies from [Build Moveit from Source](https://moveit.ros.org/install-moveit2/source/)
     ```
     sudo apt remove ros-humble-moveit-msgs
 
