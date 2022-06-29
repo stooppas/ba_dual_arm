@@ -35,6 +35,20 @@
         <group name="a_bot"/>
         <group name="b_bot"/>
     </group>
+    <group_state name="resting" group="niryo_two">
+        <joint name="a_bot_joint_1" value="0" />
+        <joint name="a_bot_joint_2" value="0.64" />
+        <joint name="a_bot_joint_3" value="-1.38" />
+        <joint name="a_bot_joint_4" value="0" />
+        <joint name="a_bot_joint_5" value="0" />
+        <joint name="a_bot_joint_6" value="0" />
+        <joint name="b_bot_joint_1" value="0" />
+        <joint name="b_bot_joint_2" value="0.64" />
+        <joint name="b_bot_joint_3" value="-1.38" />
+        <joint name="b_bot_joint_4" value="0" />
+        <joint name="b_bot_joint_5" value="0" />
+        <joint name="b_bot_joint_6" value="0" />
+    </group_state>
     <!--VIRTUAL JOINT Purpose this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="a_bot_joint_world" type="fixed" parent_frame="world" child_link="a_bot_base_link"/>
     <virtual_joint name="b_bot_joint_world" type="fixed" parent_frame="world" child_link="b_bot_base_link"/>
