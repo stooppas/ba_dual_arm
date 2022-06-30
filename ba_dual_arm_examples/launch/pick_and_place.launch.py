@@ -3,6 +3,8 @@ from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.substitutions import Command,PathJoinSubstitution,FindExecutable
 from launch_ros.actions import Node
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration, TextSubstitution
 
 from niryo_one_moveit_config.launch_common import load_yaml,load_yaml_abs
 import xacro
@@ -11,7 +13,7 @@ import os
 
 
 def generate_launch_description():
-
+    sim_arg = DeclareLaunchArgument("sim",default_value=TextSubstitution(text="false"))
     description_dir = get_package_share_directory("niryo_one_description")
     urdf_file = "niryo_two.urdf.xacro"
     moveit_config_package = "niryo_one_moveit_config"
@@ -86,6 +88,7 @@ def generate_launch_description():
             trajectory_execution,
             move_group,
             planning_scene_monitor,
+            {"sim":LaunchConfiguration("sim")},
         ],
         #arguments=['--ros-args', '--log-level', 'DEBUG']
     )
@@ -94,6 +97,7 @@ def generate_launch_description():
     ld = LaunchDescription()
 
     # Add any conditioned actions
-    ld.add_action(move_group_node)    
+    ld.add_action(move_group_node)   
+    ld.add_action(sim_arg) 
 
     return ld   

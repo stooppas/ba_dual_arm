@@ -15,6 +15,7 @@ find_package(moveit_ros_planning_interface REQUIRED)
 find_package(controller_manager REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(niryo_one_msgs REQUIRED)
 
 ament_package()
 
@@ -77,6 +78,7 @@ ament_target_dependencies(pick_and_place
   controller_manager
   rclcpp
   Eigen3
+  niryo_one_msgs
 )
 
 
